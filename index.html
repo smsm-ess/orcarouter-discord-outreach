@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OrcaRouter · Discord Outreach Playbook</title>
+    <style>
+        :root {
+            --bg: #ffffff;
+            --text: #000000;
+            --muted: #666666;
+            --border: #e5e5e5;
+            --gray: #f7f7f7;
+            --dark: #0a0a0a;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* NAV */
+        .nav {
+            position: sticky;
+            top: 0;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 100;
+        }
+        .nav-brand {
+            font-weight: 900;
+            font-size: 14px;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+            margin-right: auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-brand .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--text); display: inline-block; }
+        .nav a {
+            text-decoration: none;
+            color: var(--muted);
+            font-weight: 600;
+            font-size: 13px;
+            padding: 8px 14px;
+            border-radius: 8px;
+            transition: all 0.15s;
+        }
+        .nav a:hover { color: var(--text); background: var(--gray); }
+        .nav a.active { color: #fff; background: var(--text); font-weight: 700; }
+
+        .container { max-width: 860px; margin: 0 auto; padding: 0 24px 80px; }
+
+        /* HERO */
+        .hero { padding: 56px 0 28px; }
+        .hero .tag {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: var(--text);
+            color: #fff;
+            padding: 5px 12px;
+            border-radius: 4px;
+            margin-bottom: 18px;
+        }
+        .hero h1 {
+            font-size: 46px;
+            font-weight: 900;
+            letter-spacing: -2px;
+            line-height: 1.04;
+            margin-bottom: 16px;
+        }
+        .hero p { font-size: 18px; color: var(--muted); max-width: 620px; }
+
+        /* LOOP */
+        .loop { margin: 40px 0 12px; }
+        .loop-title { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 16px; }
+        .loop-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
+        }
+        .loop-step {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px 14px;
+            background: var(--gray);
+        }
+        .loop-step .n {
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            display: block;
+            margin-bottom: 8px;
+        }
+        .loop-step .t { font-size: 13px; font-weight: 700; line-height: 1.35; color: var(--text); }
+        .loop-step .d { font-size: 12px; color: var(--muted); margin-top: 6px; line-height: 1.45; }
+
+        /* TANDEM CALLOUT */
+        .tandem {
+            margin: 28px 0 40px;
+            background: var(--dark);
+            color: #fff;
+            border-radius: 16px;
+            padding: 28px 30px;
+        }
+        .tandem .label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; opacity: 0.6; margin-bottom: 10px; }
+        .tandem h2 { font-size: 22px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 10px; }
+        .tandem p { color: #bbb; font-size: 15px; }
+        .tandem .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+        .tandem .chip {
+            border: 1px solid #333;
+            background: #161616;
+            padding: 7px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        /* SECTIONS / TABS */
+        .section { display: none; animation: fadeIn 0.25s ease; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+        .block { border: 1px solid var(--border); border-radius: 14px; padding: 28px; margin-bottom: 18px; background: var(--bg); }
+        .block h2 { font-size: 21px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 10px; }
+        .block h3 { font-size: 15px; font-weight: 700; margin: 20px 0 6px; }
+        .block p { color: var(--muted); font-size: 15px; margin-bottom: 8px; }
+        .block strong { color: var(--text); }
+        .block ul, .block ol { margin: 8px 0 8px 22px; color: var(--muted); font-size: 15px; }
+        .block li { margin-bottom: 7px; }
+        .block a { color: var(--text); font-weight: 600; }
+
+        table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 14px; }
+        th, td { border: 1px solid var(--border); padding: 11px 14px; text-align: left; vertical-align: top; }
+        th { background: var(--gray); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+        td.mut { color: var(--muted); }
+        td.hi { color: var(--text); font-weight: 600; }
+
+        /* CHAT EXAMPLES */
+        .chat { margin: 12px 0; }
+        .chat .bubble {
+            background: var(--gray);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 18px;
+            font-size: 14px;
+            margin-bottom: 10px;
+            max-width: 85%;
+        }
+        .chat .bubble.me { background: var(--text); color: #fff; border-color: var(--text); margin-left: auto; }
+        .chat .who { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); margin-bottom: 3px; }
+        .chat .bubble.me .who { color: rgba(255,255,255,0.7); }
+
+        .takeaway {
+            border-left: 3px solid var(--text);
+            padding: 4px 0 4px 16px;
+            margin: 14px 0;
+            color: #333;
+            font-size: 14px;
+        }
+        .takeaway b { color: var(--text); }
+
+        .footer { text-align: center; color: var(--muted); font-size: 13px; padding: 40px 0 0; border-top: 1px solid var(--border); margin-top: 40px; }
+
+        @media (max-width: 720px) {
+            .nav { flex-wrap: wrap; gap: 6px; }
+            .nav-brand { width: 100%; }
+            .hero h1 { font-size: 32px; }
+            .loop-grid { grid-template-columns: repeat(2, 1fr); }
+            .chat .bubble { max-width: 95%; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-brand"><span class="dot"></span>OrcaRouter</div>
+        <a href="#" onclick="show('playbook')" class="active" id="nav-playbook">The Playbook</a>
+        <a href="#" onclick="show('realtalk')" id="nav-realtalk">Real Talk</a>
+    </nav>
+
+    <div class="container">
+        <!-- HERO -->
+        <div class="hero">
+            <span class="tag">Internal enablement</span>
+            <h1>Discord outreach —<br>keep it casual.</h1>
+            <p>Discord isn't LinkedIn. It's where the people who actually build and run the projects hang out, typing lowercase and skipping the formalities. Here's how to prospect there without getting muted.</p>
+        </div>
+
+        <!-- THE LOOP -->
+        <div class="loop">
+            <div class="loop-title">How it flows</div>
+            <div class="loop-grid">
+                <div class="loop-step"><span class="n">1</span><div class="t">Join the right servers</div><div class="d">AI, agent, and cyber communities.</div></div>
+                <div class="loop-step"><span class="n">2</span><div class="t">Ask real questions</div><div class="d">About models, costs, routing — in channels.</div></div>
+                <div class="loop-step"><span class="n">3</span><div class="t">Watch who replies</div><div class="d">Often an admin or the one running the project.</div></div>
+                <div class="loop-step"><span class="n">4</span><div class="t">DM them</div><div class="d">Stay casual. Ask more questions.</div></div>
+                <div class="loop-step"><span class="n">5</span><div class="t">Bridge to value</div><div class="d">Only when it's natural.</div></div>
+                <div class="loop-step"><span class="n">6</span><div class="t">Move it off Discord</div><div class="d">X, LinkedIn, email, or a call.</div></div>
+            </div>
+        </div>
+
+        <!-- TANDEM CALLOUT -->
+        <div class="tandem">
+            <div class="label">The rule to remember</div>
+            <h2>You usually can't close it all on Discord.</h2>
+            <p>Discord is where you <em>find</em> people and <em>start</em> the conversation — not where you finish it. The folks you DM can point you to the real decision, but the close almost always happens elsewhere. Use Discord to open the door, then walk through it on another channel.</p>
+            <div class="chips">
+                <span class="chip">X — reply to their threads</span>
+                <span class="chip">LinkedIn — make it professional</span>
+                <span class="chip">Email — follow up + materials</span>
+                <span class="chip">Phone / call — the real conversation</span>
+            </div>
+        </div>
+
+        <!-- PLAYBOOK TAB -->
+        <div id="playbook" class="section active">
+
+            <div class="block">
+                <h2>Why Discord is different</h2>
+                <p>Nobody says "hope this message finds you well" here. People type lowercase, skip punctuation, and build in public. The admins, maintainers, and heavy users are all in the same channels — and they reply.</p>
+                <table>
+                    <thead><tr><th>LinkedIn</th><th>Discord</th></tr></thead>
+                    <tbody>
+                        <tr><td class="mut">Formal, cold</td><td class="hi">Casual, warm</td></tr>
+                        <tr><td class="mut">"Best regards"</td><td class="hi">"no worries! thanks!"</td></tr>
+                        <tr><td class="mut">Pitch deck first</td><td class="hi">Help first</td></tr>
+                        <tr><td class="mut">Gatekeepers</td><td class="hi">The actual builders, directly</td></tr>
+                        <tr><td class="mut">"Let's schedule 15 min"</td><td class="hi">"worth a call or chat?"</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="block">
+                <h2>The channel-first strategy</h2>
+                <p>Don't cold-DM strangers out of nowhere. The best leads come from being visible in channels first.</p>
+                <ol>
+                    <li><strong>Start discussions.</strong> Ask genuine questions in channels — which model people use for a task, how they're handling costs, what they think of a new release.</li>
+                    <li><strong>Spot who replies.</strong> The person who actually knows the answer is very often an <strong>admin</strong>, a <strong>maintainer</strong>, or the person who <strong>runs the project or site</strong>.</li>
+                    <li><strong>DM that person.</strong> Not to pitch — to keep the conversation going. "hey, that answer was super helpful, mind if I ask a couple more things?"</li>
+                    <li><strong>Ask questions in the DM.</strong> Learn what they run, what they're wrestling with, what they're already using.</li>
+                    <li><strong>Bridge to value only when it's natural.</strong> If what you offer solves their actual problem, mention it. Casually.</li>
+                </ol>
+            </div>
+
+            <div class="block">
+                <h2>Do your homework first</h2>
+                <p>Before you DM anyone, know who they are. A little research turns a cold DM into a relevant one.</p>
+                <ul>
+                    <li>Are they a <strong>top spender</strong> in the niche? (often visible on leaderboards or rankings)</li>
+                    <li>Are they an <strong>admin or moderator</strong>?</li>
+                    <li>Do they <strong>run a project, site, or community</strong>?</li>
+                    <li>What are they <strong>already using</strong>?</li>
+                </ul>
+                <div class="takeaway"><b>Why it matters:</b> when you reference something specific about them, the DM instantly stops feeling like spam.</div>
+            </div>
+
+            <div class="block">
+                <h2>DM etiquette (non-negotiable)</h2>
+                <ul>
+                    <li>Read the server rules before you message anyone.</li>
+                    <li><strong>Acknowledge you're DMing</strong> — "idk if this is allowed to DM but..." shows respect for the space.</li>
+                    <li><strong>Never mass-DM.</strong> One real person at a time.</li>
+                    <li><strong>Lowercase, human, zero corporate speak.</strong> If it reads like a bot, it's ignored.</li>
+                </ul>
+            </div>
+
+            <div class="block">
+                <h2>Lead with value, not pitch</h2>
+                <table>
+                    <thead><tr><th>Fluff</th><th>What actually works</th></tr></thead>
+                    <tbody>
+                        <tr><td class="mut">"Check out our new AI router!"</td><td class="hi">"have you looked at [competitor] alternatives? maybe something cheaper with [concrete benefit]?"</td></tr>
+                        <tr><td class="mut">"We'd love to hop on a call."</td><td class="hi">"worth exploring on a call or chat?"</td></tr>
+                        <tr><td class="mut">"Our platform provides token rebates."</td><td class="hi">"we give you 5% token spend back on your user spend."</td></tr>
+                    </tbody>
+                </table>
+                <div class="takeaway"><b>The pattern:</b> a specific number or benefit beats a product name every single time.</div>
+            </div>
+
+            <div class="block">
+                <h2>Graceful exits</h2>
+                <p>Rejection is normal. End warm so the door stays open.</p>
+                <div class="takeaway"><b>The whole reply is just:</b> "no worries! thanks for the response!" — no pushback, no wall of text, no follow-up pitch. Casual in, casual out.</div>
+            </div>
+
+            <div class="block">
+                <h2>Server shortlist</h2>
+                <p>Start with these. Join, watch, and be helpful before you reach out.</p>
+                <table>
+                    <thead><tr><th>Category</th><th>Servers</th></tr></thead>
+                    <tbody>
+                        <tr><td class="hi">AI / agent builders</td><td class="mut">Hugging Face, LangChain, AutoGPT, Mistral AI, Anthropic Developer, LocalLLaMA, Latent Space, Lovable</td></tr>
+                        <tr><td class="hi">Cybersecurity / red team</td><td class="mut">Red Team Village, OffSec, John Hammond, Black Hills Infosec, NahamSec, The Cyber Mentor (TCM)</td></tr>
+                        <tr><td class="hi">Home base</td><td class="mut">OrcaRouter's own Discord — prospects already hang out here</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- REAL TALK TAB -->
+        <div id="realtalk" class="section">
+
+            <div class="block">
+                <h2>What casual actually looks like</h2>
+                <p>Pulled from real conversations — anonymized, no usernames, just the parts worth copying.</p>
+            </div>
+
+            <div class="block">
+                <h3>The opener</h3>
+                <div class="chat">
+                    <div class="bubble me"><div class="who">You</div>hello, idk if this is allowed or not (dm) but have you looked at [competitor] alternatives? maybe something cheaper and something that gives you [concrete benefit]?</div>
+                </div>
+                <div class="takeaway"><b>Why it works:</b> etiquette first ("idk if this is allowed"), specific and relevant (their existing tool + a real benefit), and it reads like a human, not a bot.</div>
+            </div>
+
+            <div class="block">
+                <h3>The research line</h3>
+                <div class="chat">
+                    <div class="bubble me"><div class="who">You</div>gotcha, you're still listed as one of the top spenders in the niche, so was wondering...</div>
+                </div>
+                <div class="takeaway"><b>Why it works:</b> proves you did your homework, and it flatters with fact — not fluff.</div>
+            </div>
+
+            <div class="block">
+                <h3>The value prop</h3>
+                <div class="chat">
+                    <div class="bubble me"><div class="who">You</div>i work at a similar company and we offer a program where you get 5% token spend back on your user spend — worth exploring on a call or chat?</div>
+                </div>
+                <div class="takeaway"><b>Why it works:</b> one concrete number (5% back), plus a soft CTA. No pressure, no "let's sync calendars."</div>
+            </div>
+
+            <div class="block">
+                <h3>The graceful exit</h3>
+                <div class="chat">
+                    <div class="bubble"><div class="who">Them</div>Ah I see. No, I'm good thanks.</div>
+                    <div class="bubble me"><div class="who">You</div>no worries! thanks for the response!</div>
+                </div>
+                <div class="takeaway"><b>Why it works:</b> zero pushback. Leaves the door open for a future touch — you never know when they'll remember you.</div>
+            </div>
+
+            <div class="block">
+                <h3>The "help first" play</h3>
+                <div class="chat">
+                    <div class="bubble me"><div class="who">You</div>ahh gotcha gotcha, that makes sense. appreciate you being down to add the login flow. i'll poke around on the [product] side for the other stuff and see where it goes. thanks for the help!</div>
+                </div>
+                <div class="takeaway"><b>Why it works:</b> you helped them with something real first. Warm, collaborative, no pitch. Even if it doesn't close now, you've built trust for the next touch.</div>
+            </div>
+
+            <div class="block">
+                <h3>The casual voice cheat sheet</h3>
+                <table>
+                    <thead><tr><th>Don't say</th><th>Say</th></tr></thead>
+                    <tbody>
+                        <tr><td class="mut">"Hello, I hope this message finds you well."</td><td class="hi">"hey, idk if this is allowed to DM but..."</td></tr>
+                        <tr><td class="mut">"I'd love to schedule 15 minutes."</td><td class="hi">"worth exploring on a call or chat?"</td></tr>
+                        <tr><td class="mut">"Best regards."</td><td class="hi">"no worries! thanks!"</td></tr>
+                        <tr><td class="mut">"Our platform provides token rebates."</td><td class="hi">"we give you 5% token spend back."</td></tr>
+                        <tr><td class="mut">"something"</td><td class="hi">"smth"</td></tr>
+                        <tr><td class="mut">"got it"</td><td class="hi">"gotcha gotcha"</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="footer">OrcaRouter · Discord Outreach Playbook · Internal use only</div>
+    </div>
+
+    <script>
+        function show(id) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav a').forEach(a => a.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.getElementById('nav-' + id).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+    </script>
+</body>
+</html>
